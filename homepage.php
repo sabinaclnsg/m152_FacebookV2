@@ -154,7 +154,6 @@ require_once('./controllers/addPost_controller.php');
 					</div>
 					<div class="modal-footer">
 						<div>
-							<input type="submit" class="btn btn-primary btn-sm" value="Publish" form="addPostForm">
 							<ul class="pull-left list-inline">
 								<li>
 									<div class="image-upload">
@@ -167,7 +166,11 @@ require_once('./controllers/addPost_controller.php');
 								<li><a href=""><i class="fas fa-smile"></i></i></a></li>
 								<li><a href=""><i class="fas fa-map-marker-alt"></i></a></li>
 								<li><a href=""><i class="fas fa-paste"></i></a></li>
+								<li>
+									<div id="file_name"></div>
+								</li>
 							</ul>
+							<input type="submit" class="btn btn-primary btn-sm" value="Publish" form="addPostForm">
 						</div>
 					</div>
 				</form>
@@ -186,6 +189,15 @@ require_once('./controllers/addPost_controller.php');
 				$('#lg-menu').toggleClass('hidden-xs').toggleClass('visible-xs');
 				$('#xs-menu').toggleClass('visible-xs').toggleClass('hidden-xs');
 				$('#btnShow').toggle();
+			});
+		});
+
+		const fileSelector = document.getElementById('file-input');
+		fileSelector.addEventListener('change', (event) => {
+			const fileList = event.target.files;
+
+			Array.from(fileList).forEach(element => {
+				document.getElementById('file_name').innerHTML += element.name + ", ";
 			});
 		});
 	</script>

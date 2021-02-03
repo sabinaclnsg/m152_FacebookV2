@@ -9,10 +9,10 @@ include_once 'dbConnection.php';
 class postDAO
 {
 
-    public static function addPost($commentaire)
+    public static function addPost($commentaire, $lienImg)
     {
         $db = DBConnection::getConnection();
-        $sql = "INSERT INTO `m152_facebookv2`.`post` (`idPost`, `commentaire`, `creationDate`, `modificationDate`) VALUES (NULL, commentaire:, NULL, NULL)";
+        $sql = "INSERT INTO `m152_facebookv2`.`post` (`id`, `commentaire`, `creationDate`, `modificationDate`) VALUES (NULL, :commentaire, now(), NULL)";
         $q = $db->prepare($sql);
         $q->execute(array(
             ':commentaire' => $commentaire
@@ -22,7 +22,7 @@ class postDAO
     public static function changePath($name, $tempname)
     {
         $db = DBConnection::getConnection();
-        $sql = "UPDATE `bird` SET `lienImage` = :named WHERE `post`.`lienImage` = :tempname";
+        $sql = "UPDATE `m152_facebookv2` SET `lienImage` = :named WHERE `post`.`lienImage` = :tempname";
 
         $q = $db->prepare($sql);
         $q->execute(array(
