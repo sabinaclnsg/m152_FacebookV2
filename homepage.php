@@ -1,5 +1,6 @@
 <?php
 require_once('./controllers/addPost_controller.php');
+require_once('./controllers/showPosts.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,51 +78,10 @@ require_once('./controllers/addPost_controller.php');
 						<div class="full col-sm-9">
 
 							<!-- content -->
-							<div class="row">
 
-								<!-- main col left -->
-								<div class="col-sm-5">
-
-									<div class="panel panel-default">
-										<div class="panel-thumbnail"><img src="assets/img/bg_5.jpg" class="img-responsive"></div>
-										<div class="panel-body">
-											<p class="lead">Urbanization</p>
-											<p>45 Followers, 13 Posts</p>
-
-											<p>
-												<img src="assets/img/uFp_tsTJboUY7kue5XAsGAs28.png" height="28px" width="28px">
-											</p>
-										</div>
-									</div>
-
-								</div>
-
-								<!-- main col right -->
-								<div class="col-sm-7">
-									<div class="panel panel-default">
-										<div class="panel-body">
-											<h1>WELCOME</h1>
-										</div>
-									</div>
-
-
-
-									<div class="panel panel-default">
-										<div class="panel-thumbnail"><img src="assets/img/bg_4.jpg" class="img-responsive"></div>
-										<div class="panel-body">
-											<p class="lead">Social Good</p>
-											<p>1,200 Followers, 83 Posts</p>
-
-											<p>
-												<img src="assets/img/photo.jpg" height="28px" width="28px">
-												<img src="assets/img/photo.png" height="28px" width="28px">
-												<img src="assets/img/photo_002.jpg" height="28px" width="28px">
-											</p>
-										</div>
-									</div>
-
-								</div>
-							</div>
+							<?php
+								showPosts();
+							?>
 							<!--/row-->
 
 							<!-- footer -->
@@ -146,11 +106,9 @@ require_once('./controllers/addPost_controller.php');
 				</div>
 				<form action="index.php?page=homepage" enctype="multipart/form-data" method="POST" id="addPostForm">
 					<div class="modal-body">
-						<form class="form center-block">
 							<div class="form-group">
 								<textarea class="form-control input-lg" autofocus="" placeholder="Write something..." name="commentaire"></textarea>
 							</div>
-						</form>
 					</div>
 					<div class="modal-footer">
 						<div>
@@ -170,7 +128,7 @@ require_once('./controllers/addPost_controller.php');
 									<div id="file_name"></div>
 								</li>
 							</ul>
-							<input type="submit" class="btn btn-primary btn-sm" value="Publish" form="addPostForm">
+							<input type="submit" name="submit" class="btn btn-primary btn-sm" value="Publish" form="addPostForm">
 						</div>
 					</div>
 				</form>
@@ -198,6 +156,7 @@ require_once('./controllers/addPost_controller.php');
 
 			Array.from(fileList).forEach(element => {
 				document.getElementById('file_name').innerHTML += element.name + ", ";
+				console.log(element.type);
 			});
 		});
 	</script>
