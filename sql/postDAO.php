@@ -2,6 +2,7 @@
 
 namespace facebook\sql;
 
+use Exception;
 use facebook\sql\DBConnection;
 
 include_once 'dbConnection.php';
@@ -9,18 +10,49 @@ include_once 'dbConnection.php';
 class postDAO
 {
 
-    public static function addPost($commentaire, $lienImg, $type)
-    {
-        $db = DBConnection::getConnection();
-        $sql = "INSERT INTO `m152_facebookv2`.`post` (`id`, `commentaire`, `creationDate`, `modificationDate`, `image`, `type`) VALUES (NULL, :commentaire, now(), now(), :lienImg, :type)";
-        $q = $db->prepare($sql);
-        $q->execute(array(
-            ':commentaire' => $commentaire,
-            ':lienImg' => $lienImg,
-            ':type' => $type
-        ));
+    //$db->beginTransaction()
+    // ... execute prepare ...
+    // $db->commit()
+    // $db->rollBack()
 
-        return $db->lastInsertId();
+
+
+    public static function addPost($commentaire)
+    {
+        try {
+            $db = DBConnection::getConnection();
+            //$db->beginTransaction();
+            $sql = "INSERT INTO `m152_facebookv2`.`post` (`id`, `commentaire`, `creationDate`, `modificationDate`, `image`, `type`) VALUES (NULL, :commentaire, now(), now(), NULL, NULL)";
+            $q = $db->prepare($sql);
+            $q->execute(array(
+                ':commentaire' => $commentaire,
+            ));
+            //$db->commit();
+            return $db->lastInsertId();
+        } catch (Exception $e) {
+            //$db->rollBack();
+            return false;
+        }
+    }
+
+    public static function addImage($type, $nom, $idPost)
+    {
+        try {
+            $db = DBConnection::getConnection();
+            //$db->beginTransaction();
+            $sql = "INSERT INTO `m152_facebookv2`.`media` (`id`, `type`, `nom`, `creationDate`, `modificationDate`, `idPost`) VALUES (NULL, :type, :nom, now(), now(), :idPost)";
+            $q = $db->prepare($sql);
+            $q->execute(array(
+                ':type' => $type,
+                ':nom' => $nom,
+                ':idPost' => $idPost
+            ));
+            //$db->commit();
+            return $db->lastInsertId();
+        } catch (Exception $e) {
+            //$db->rollBack();
+            return false;
+        }
     }
 
     public static function getPosts()
@@ -30,6 +62,17 @@ class postDAO
 
         $q = $db->prepare($sql);
         $q->execute();
+        $result = $q->fetchAll();
+        return $result;
+    }
+
+    public static function getImgFromPost($id)
+    {
+        $db = DBConnection::getConnection();
+        $sql = "SELECT * FROM post INNER JOIN media ON media.idPost=post.id WHERE post.id = :id";
+
+        $q = $db->prepare($sql);
+        $q->execute(array(':id' => $id));
         $result = $q->fetchAll();
         return $result;
     }
@@ -44,20 +87,5 @@ class postDAO
             ':named' => $name,
             ':tempname' => substr($tempname, 0, 2)
         ));
-    }
-
-    public static function addImage($typeMedia, $nomFichierMedia)
-    {
-        $db = DBConnection::getConnection();
-        $sql = "INSERT INTO media (type, nom) VALUES (:typeMedia, :nomFichierMedia)";
-        $request = $db->prepare($sql);
-        if ($request->execute(array(
-            ':typeMedia' => $typeMedia,
-            ':nomFichierMedia' => $nomFichierMedia
-        ))) {
-            return TRUE;
-        } else {
-            return NULL;
-        }
     }
 }
